@@ -1,0 +1,56 @@
+.container {
+    position: relative;
+    width: 100%;
+    height: 100%;
+    overflow: hidden;
+    border-radius: 12px;
+    background: transparent;
+    /* Overlay on top of chart */
+}
+
+/* The Glassmorphism Overlay */
+.canvas {
+    position: absolute;
+    top: 0;
+    left: 0;
+    width: 100%;
+    height: 100%;
+    cursor: crosshair;
+    background: var(--color-glass);
+    backdrop-filter: blur(0px);
+    /* Adjust blur if needed, or keep low for chart visibility */
+    border: 1px solid var(--color-glass-border);
+    box-shadow: 0 4px 30px rgba(0, 0, 0, 0.1);
+    z-index: 10;
+}
+
+.overlayUI {
+    position: absolute;
+    top: 20px;
+    right: 20px;
+    pointer-events: none;
+    display: flex;
+    flex-direction: column;
+    gap: 10px;
+    z-index: 20;
+}
+
+.metricCard {
+    background: rgba(10, 14, 23, 0.8);
+    border: 1px solid var(--color-primary);
+    padding: 10px 15px;
+    border-radius: 4px;
+    color: var(--color-primary);
+    font-family: var(--font-mono);
+    font-size: 12px;
+    box-shadow: 0 0 10px rgba(0, 243, 255, 0.2);
+    min-width: 150px;
+}
+
+.metricValue {
+    font-size: 16px;
+    font-weight: bold;
+    color: #fff;
+    display: block;
+    margin-top: 4px;
+}

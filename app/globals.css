@@ -1,0 +1,40 @@
+:root {
+  --background: #000000;
+  --foreground: #ffffff;
+
+  --color-primary: #ffffff;
+  /* White */
+  --color-secondary: #333333;
+  /* Dark Grey */
+  --color-accent: #888888;
+  /* Grey for drawing */
+  --color-glass: rgba(255, 255, 255, 0.05);
+  --color-glass-border: rgba(255, 255, 255, 0.2);
+  --font-mono: 'Courier New', Courier, monospace;
+}
+
+* {
+  box-sizing: border-box;
+  padding: 0;
+  margin: 0;
+}
+
+body {
+  background-color: var(--background);
+  color: var(--foreground);
+  font-family: 'Inter', 'Apple SD Gothic Neo', 'Malgun Gothic', sans-serif;
+  /* Clean Gothic Stack */
+  overflow: hidden;
+  /* Prevent scroll for the app-like feel */
+}
+
+a {
+  color: inherit;
+  text-decoration: none;
+}
+
+button {
+  border-radius: 0 !important;
+  /* Force square corners */
+  font-family: inherit;
+}
