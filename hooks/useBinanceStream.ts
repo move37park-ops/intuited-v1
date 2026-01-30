@@ -8,6 +8,7 @@ export function useBinanceStream(symbols: string[] = ['btcusdt', 'ethusdt', 'sol
     const [prices, setPrices] = useState<PriceMap>({});
     const wsRef = useRef<WebSocket | null>(null);
 
+    const symbolsKey = JSON.stringify(symbols);
     useEffect(() => {
         // Construct stream URL
         // Format: wss://stream.binance.com:9443/stream?streams=btcusdt@miniTicker/ethusdt@miniTicker...
@@ -48,7 +49,8 @@ export function useBinanceStream(symbols: string[] = ['btcusdt', 'ethusdt', 'sol
                 ws.close();
             }
         };
-    }, [JSON.stringify(symbols)]); // Re-connect only if symbols list changes
+        // eslint-disable-next-line react-hooks/exhaustive-deps
+    }, [symbolsKey]); // Re-connect only if symbols list changes
 
     return prices;
 }

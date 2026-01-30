@@ -7,10 +7,17 @@ import PredictionCanvas from './PredictionCanvas';
 
 interface InteractiveChartProps {
     symbol?: string;
+    lang?: 'ENG' | 'KR';
+    exchangeRate?: number;
     onSubmit?: () => void;
 }
 
-export default function InteractiveChart({ symbol = 'BTCUSDT', onSubmit }: InteractiveChartProps) {
+export default function InteractiveChart({
+    symbol = 'BTCUSDT',
+    lang = 'ENG',
+    exchangeRate = 1435,
+    onSubmit
+}: InteractiveChartProps) {
     const chartContainerRef = useRef<HTMLDivElement>(null);
     const chartRef = useRef<IChartApi | null>(null);
     const seriesRef = useRef<ISeriesApi<"Candlestick"> | null>(null);
@@ -42,15 +49,26 @@ export default function InteractiveChart({ symbol = 'BTCUSDT', onSubmit }: Inter
                 textColor: '#888',
             },
             grid: {
-                vertLines: { color: 'rgba(255, 255, 255, 0.1)' },
-                horzLines: { color: 'rgba(255, 255, 255, 0.1)' },
+                vertLines: { color: 'rgba(255, 255, 255, 0.15)' },
+                horzLines: { color: 'rgba(255, 255, 255, 0.15)' },
             },
             width: chartContainerRef.current.clientWidth,
             height: chartContainerRef.current.clientHeight,
             timeScale: {
                 borderColor: '#333',
                 timeVisible: true,
-                rightOffset: 200, // Increased space (~2h worth)
+                secondsVisible: false,
+                rightOffset: 50, // Reduced as requested
+                barSpacing: 10, // Increased to force 1h grid blocks (1h = 12 bars @ 5m = 120px)
+                minBarSpacing: 5,
+                fixLeftEdge: true,
+                shiftVisibleRangeOnNewBar: true,
+                tickMarkFormatter: (time: number) => {
+                    const date = new Date(time * 1000);
+                    const hours = date.getHours().toString().padStart(2, '0');
+                    const minutes = date.getMinutes().toString().padStart(2, '0');
+                    return `${hours}:${minutes}`;
+                },
             },
         });
 
@@ -106,14 +124,17 @@ export default function InteractiveChart({ symbol = 'BTCUSDT', onSubmit }: Inter
         };
         window.addEventListener('resize', handleResize);
 
-        // Initial Data Fetch
-        fetchHistoricalData(symbol, '1m', 100).then(data => {
+        // Initial Data Fetch - 5m candles, 144 units (12 hours)
+        fetchHistoricalData(symbol, '5m', 144).then(data => {
+            const isKR = lang === 'KR';
+            const timezoneOffset = isKR ? 9 * 3600 : -5 * 3600; // KR: UTC+9, US: UTC-5 (EST)
+
             const formatData = data.map(d => ({
-                time: d.time / 1000 as any,
-                open: d.open,
-                high: d.high,
-                low: d.low,
-                close: d.close
+                time: (d.time / 1000 + timezoneOffset) as any,
+                open: isKR ? d.open * exchangeRate : d.open,
+                high: isKR ? d.high * exchangeRate : d.high,
+                low: isKR ? d.low * exchangeRate : d.low,
+                close: isKR ? d.close * exchangeRate : d.close
             }));
             if (seriesRef.current) {
                 seriesRef.current.setData(formatData);
@@ -128,29 +149,31 @@ export default function InteractiveChart({ symbol = 'BTCUSDT', onSubmit }: Inter
             clearInterval(syncInterval);
             cleanupChart();
         };
-    }, [symbol]);
+    }, [symbol, lang, exchangeRate]); // Added lang and exchangeRate to trigger updates
 
     // Polling Data
     useEffect(() => {
         if (!dataLoaded) return;
         const interval = setInterval(() => {
             if (!seriesRef.current) return;
-            fetchHistoricalData(symbol, '1m', 1).then(data => {
+            fetchHistoricalData(symbol, '5m', 1).then(data => {
                 if (data.length > 0 && seriesRef.current) {
                     const last = data[0];
+                    const isKR = lang === 'KR';
+                    const timezoneOffset = isKR ? 9 * 3600 : -5 * 3600;
                     const update = {
-                        time: last.time / 1000 as any,
-                        open: last.open,
-                        high: last.high,
-                        low: last.low,
-                        close: last.close
+                        time: (last.time / 1000 + timezoneOffset) as any,
+                        open: isKR ? last.open * exchangeRate : last.open,
+                        high: isKR ? last.high * exchangeRate : last.high,
+                        low: isKR ? last.low * exchangeRate : last.low,
+                        close: isKR ? last.close * exchangeRate : last.close
                     };
                     seriesRef.current.update(update);
                 }
             });
         }, 5000);
         return () => clearInterval(interval);
-    }, [symbol, dataLoaded]);
+    }, [symbol, dataLoaded, lang, exchangeRate]); // Added lang and exchangeRate here too
 
     return (
         <div style={{ position: 'relative', width: '100%', height: '100%' }}>

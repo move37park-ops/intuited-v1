@@ -140,7 +140,7 @@ export default function PredictionCanvas({
   const isValidPrediction = () => {
     if (pathRef.current.length < 2) return false;
     const lastPoint = pathRef.current[pathRef.current.length - 1];
-    return (lastPoint.x - startPoint.x) > 100; // Require at least 100px width (~20 candles aprox depending on zoom)
+    return (lastPoint.x - startPoint.x) >= 120; // Exactly 1 hour (12 * 5m candles * 10px spacing)
   };
 
   const stopDrawing = () => {
@@ -216,9 +216,22 @@ export default function PredictionCanvas({
         ctx.fillStyle = '#ffffff';
         ctx.fill();
 
+        // Draw implicit "Minimum 1H" guides
+        ctx.setLineDash([2, 5]);
+        ctx.strokeStyle = 'rgba(255,255,255,0.3)'; // Increased from 0.1
+        ctx.beginPath();
+        ctx.moveTo(startPoint.x + 120, 0);
+        ctx.lineTo(startPoint.x + 120, canvas.height);
+        ctx.stroke();
+        ctx.setLineDash([]);
+
+        ctx.font = '9px sans-serif';
+        ctx.fillStyle = 'rgba(255,255,255,0.4)'; // Increased from 0.15
+        ctx.fillText('MINIMUM REQUIRED', startPoint.x + 125, 20);
+
         // Draw explicit text "Start Here"
         ctx.font = '10px sans-serif';
-        ctx.fillStyle = '#888';
+        ctx.fillStyle = 'rgba(255,255,255,0.6)'; // Increased from #888
         ctx.fillText('START PREDICTION', startPoint.x + 8, startPoint.y + 3);
       }
     }
