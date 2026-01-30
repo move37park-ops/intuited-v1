@@ -40,4 +40,4 @@ Open [http://localhost:3000](http://localhost:3000) with your browser to explore
 
 ---
 
-© 2026 INTUITED CORP. ALL RIGHTS RESERVED.
+© 2026 INTUITED INC. ALL RIGHTS RESERVED.
