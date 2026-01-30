@@ -5,7 +5,7 @@
 
 ---
 
-## ✨ Key Features
+## Key Features
 
 - **Collective Intuition System**: A unique approach to market forecasting that "syncs the swarm," merging individual predictions into a powerful collective signal.
 - **Interactive Drawing Workspace**: Draw your own price paths and predictions directly on live charts using an intuitive, canvas-based interface.
@@ -13,7 +13,7 @@
 - **Premium Dashboard**: A minimalist, high-contrast monochrome UI designed for focus and analytical clarity, optimized for single-screen viewing.
 - **Global Accessibility**: Fully localized for both **English (US)** and **Korean (KR)** audiences, including real-time currency conversion (USD/KRW).
 
-## 🛠️ Tech Stack
+## Tech Stack
 
 - **Framework**: [Next.js](https://nextjs.org/) (App Router)
 - **Styling**: [Tailwind CSS](https://tailwindcss.com/)
@@ -22,7 +22,7 @@
 - **Typography**: [Pretendard Variable](https://github.com/orioncactus/pretendard)
 - **Icons**: Custom Minimalist Visuals
 
-## 🚀 Getting Started
+## Getting Started
 
 First, install the dependencies:
 
@@ -38,7 +38,7 @@ npm run dev
 
 Open [http://localhost:3000](http://localhost:3000) with your browser to explore the dashboard.
 
-## 📐 Design Philosophy
+## Design Philosophy
 
 Intuited follows a **Hybrid Alignment** and **Golden Ratio** inspired layout. It combines left-aligned narrative elements with a symmetrically centered statistics board, creating a balanced, professional environment for collective market intuition.
 
