@@ -38,10 +38,6 @@ npm run dev
 
 Open [http://localhost:3000](http://localhost:3000) with your browser to explore the dashboard.
 
-## Design Philosophy
-
-Intuited follows a **Hybrid Alignment** and **Golden Ratio** inspired layout. It combines left-aligned narrative elements with a symmetrically centered statistics board, creating a balanced, professional environment for collective market intuition.
-
 ---
 
 © 2026 INTUITED CORP. ALL RIGHTS RESERVED.
