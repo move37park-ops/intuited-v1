@@ -3,7 +3,7 @@ import "./globals.css";
 
 export const metadata: Metadata = {
   title: "INTUITED | Collective Intuition System",
-  description: "Harness collective intuition to predict market movements.",
+  description: "Harness collective intuition to predict market movements",
 };
 
 export default function RootLayout({

@@ -34,8 +34,8 @@ export default function Home() {
       motto: "Drawing the Future, Syncing the Swarm",
       desc: (
         <>
-          Harness collective intuition to forecast market trends.<br />
-          Draw your prediction, sync with the swarm.
+          Harness collective intuition to forecast market trends<br />
+          Draw your prediction, sync with the swarm
         </>
       ),
     },
@@ -44,8 +44,8 @@ export default function Home() {
       motto: "드로잉으로 읽는 미래, 데이터로 모이는 직관",
       desc: (
         <>
-          집단 지성을 활용해 시장 흐름을 예측합니다.<br />
-          당신의 예측을 드로잉하고, 집단 데이터와 연결하세요.
+          집단 지성을 활용해 시장 흐름을 예측합니다<br />
+          당신의 예측을 드로잉하고, 집단 데이터와 연결하세요
         </>
       ),
     }
