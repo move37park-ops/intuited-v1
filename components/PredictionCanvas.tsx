@@ -225,12 +225,12 @@ export default function PredictionCanvas({
         ctx.stroke();
         ctx.setLineDash([]);
 
-        ctx.font = '9px sans-serif';
+        ctx.font = '10px "Pretendard Variable", sans-serif';
         ctx.fillStyle = 'rgba(255,255,255,0.4)'; // Increased from 0.15
         ctx.fillText('MINIMUM REQUIRED', startPoint.x + 125, 20);
 
         // Draw explicit text "Start Here"
-        ctx.font = '10px sans-serif';
+        ctx.font = '11px "Pretendard Variable", sans-serif';
         ctx.fillStyle = 'rgba(255,255,255,0.6)'; // Increased from #888
         ctx.fillText('START PREDICTION', startPoint.x + 8, startPoint.y + 3);
       }

@@ -50,11 +50,11 @@ export default function StatsBoard({ lang }: StatsBoardProps) {
 
 function StatItem({ label, value }: { label: string, value: string }) {
     return (
-        <div className="flex flex-col items-center text-center w-36 md:w-60 overflow-hidden">
-            <span className="text-[11px] md:text-sm tracking-[0.2em] text-white/50 mb-2 leading-none uppercase truncate w-full font-normal">
+        <div className="flex flex-col items-center text-center px-4 md:px-8">
+            <span className="text-xs md:text-sm tracking-[0.3em] text-white/40 mb-3 leading-none uppercase truncate w-full font-bold">
                 {label}
             </span>
-            <span className="text-2xl md:text-4xl font-medium text-white leading-none tabular-nums tracking-tight">
+            <span className="text-3xl md:text-5xl font-light text-white leading-none tabular-nums tracking-tighter drop-shadow-lg">
                 {value}
             </span>
         </div>

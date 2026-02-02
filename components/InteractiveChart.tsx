@@ -2,13 +2,15 @@
 
 import React, { useEffect, useRef, useState } from 'react';
 import { createChart, ColorType, IChartApi, ISeriesApi, CandlestickData, CandlestickSeries } from 'lightweight-charts';
-import { fetchHistoricalData } from '@/utils/binance';
+import { fetchMarketData } from '@/utils/marketData';
 import PredictionCanvas from './PredictionCanvas';
 
 interface InteractiveChartProps {
     symbol?: string;
     lang?: 'ENG' | 'KR';
     exchangeRate?: number;
+    timeframe?: '4H' | '1Q';
+    onPathComplete?: (path: any[]) => void;
     onSubmit?: () => void;
 }
 
@@ -16,6 +18,8 @@ export default function InteractiveChart({
     symbol = 'BTCUSDT',
     lang = 'ENG',
     exchangeRate = 1435,
+    timeframe = '4H',
+    onPathComplete,
     onSubmit
 }: InteractiveChartProps) {
     const chartContainerRef = useRef<HTMLDivElement>(null);
@@ -47,6 +51,7 @@ export default function InteractiveChart({
             layout: {
                 background: { type: ColorType.Solid, color: 'transparent' },
                 textColor: '#888',
+                fontFamily: "'Pretendard Variable', sans-serif",
             },
             grid: {
                 vertLines: { color: 'rgba(255, 255, 255, 0.15)' },
@@ -59,7 +64,7 @@ export default function InteractiveChart({
                 timeVisible: true,
                 secondsVisible: false,
                 rightOffset: 50, // Reduced as requested
-                barSpacing: 10, // Increased to force 1h grid blocks (1h = 12 bars @ 5m = 120px)
+                barSpacing: timeframe === '4H' ? 10 : 6, // Wider for short term, narrower for long term
                 minBarSpacing: 5,
                 fixLeftEdge: true,
                 shiftVisibleRangeOnNewBar: true,
@@ -124,8 +129,13 @@ export default function InteractiveChart({
         };
         window.addEventListener('resize', handleResize);
 
-        // Initial Data Fetch - 5m candles, 144 units (12 hours)
-        fetchHistoricalData(symbol, '5m', 144).then(data => {
+        // Initial Data Fetch
+        // 4H Mode: Use '5m' candles, limit 144 (12h history for context) -> User predicts next 4H
+        // 1Q Mode: Use '1d' candles, limit 365 (1y history for context) -> User predicts next 90 days
+        const apiInterval = timeframe === '4H' ? '5m' : '1d';
+        const limit = timeframe === '4H' ? 144 : 365;
+
+        fetchMarketData(symbol, apiInterval, limit).then(data => {
             const isKR = lang === 'KR';
             const timezoneOffset = isKR ? 9 * 3600 : -5 * 3600; // KR: UTC+9, US: UTC-5 (EST)
 
@@ -149,14 +159,17 @@ export default function InteractiveChart({
             clearInterval(syncInterval);
             cleanupChart();
         };
-    }, [symbol, lang, exchangeRate]); // Added lang and exchangeRate to trigger updates
+    }, [symbol, lang, exchangeRate, timeframe]);
 
     // Polling Data
     useEffect(() => {
         if (!dataLoaded) return;
         const interval = setInterval(() => {
             if (!seriesRef.current) return;
-            fetchHistoricalData(symbol, '5m', 1).then(data => {
+            // Polling interval matches timeframe context roughly
+            const apiInterval = timeframe === '4H' ? '5m' : '1d';
+
+            fetchMarketData(symbol, apiInterval, 1).then(data => {
                 if (data.length > 0 && seriesRef.current) {
                     const last = data[0];
                     const isKR = lang === 'KR';
@@ -173,7 +186,7 @@ export default function InteractiveChart({
             });
         }, 5000);
         return () => clearInterval(interval);
-    }, [symbol, dataLoaded, lang, exchangeRate]); // Added lang and exchangeRate here too
+    }, [symbol, dataLoaded, lang, exchangeRate, timeframe]);
 
     return (
         <div style={{ position: 'relative', width: '100%', height: '100%' }}>
@@ -192,6 +205,7 @@ export default function InteractiveChart({
                             minPrice={visibleRange.min}
                             maxPrice={visibleRange.max}
                             startPoint={startPoint}
+                            onPathComplete={onPathComplete}
                             onSubmit={onSubmit}
                         />
                     </div>
